@@ -50,6 +50,9 @@ Texture n, o, p, q, r, s, t, u, v, w, x, y, z;
 Texture singleQuote, comma;
 Texture testMap;
 Texture hitBoxTexture;
+Texture mcStationary;
+Texture mcWalking1;
+Texture mcWalking2;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -162,6 +165,9 @@ void initTextures() {
 	comma = Texture("Textures/comma.png");
 	testMap = Texture("Textures/mapTest.png");
 	hitBoxTexture = Texture("Textures/hitBoxTexture.png");
+	mcStationary = Texture("Textures/mc_stationary.png");
+	mcWalking1 = Texture("Textures/mc_step_one.png");
+	mcWalking2 = Texture("Textures/mc_step_two.png");
     a.LoadTexture();
     b.LoadTexture();
     c.LoadTexture();
@@ -192,6 +198,9 @@ void initTextures() {
 	comma.LoadTexture();
 	testMap.LoadTexture();
 	hitBoxTexture.LoadTexture();
+	mcStationary.LoadTexture();
+	mcWalking1.LoadTexture();
+	mcWalking2.LoadTexture();
 }
 
 void collisionDec(float& XMovement, float& YMovement) {
@@ -252,6 +261,11 @@ int main()
 	float timeOfHit = 0.0f;
     float hasHit = 0.0f;
 
+    float changeStep = 0.0f;
+	float stepTime = 0.0f;
+
+	bool activateWalking = false;
+
     while (!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();
@@ -260,6 +274,7 @@ int main()
 
 		hasHit = glfwGetTime() - timeOfHit;
        
+        changeStep = glfwGetTime() - stepTime;
 
         glfwPollEvents();
 
@@ -299,7 +314,7 @@ int main()
 
 		spawnObj(2, XMovement, YMovement, 0.2f, 1500.0f, 1500.0f, 1.0f, testMap, uniformModel);
 
-		spawnObj(0, 500.0f, 400.0f, 0.5f, 3.0f * 23, 5.0f * 20, 1.0f, testTexture, uniformModel);
+		//spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcStationary, uniformModel);
         
 		
 
@@ -353,17 +368,22 @@ int main()
                 else {
                     if (keys[GLFW_KEY_W] && !dontMoveUp) {
                         YMovement -= 300.0f * deltaTime;
+                        activateWalking = true;
                     }
                     if (keys[GLFW_KEY_S] && !dontMoveDown) {
                         YMovement += 300.0f * deltaTime;
+                        activateWalking = true;
                     }
                     if (keys[GLFW_KEY_A] && !dontMoveLeft) {
                         XMovement += 300.0f * deltaTime;
+						activateWalking = true;
                     }
                     if (keys[GLFW_KEY_D] && !dontMoveRight) {
                         XMovement -= 300.0f * deltaTime;
+                        activateWalking = true;
                     }
                 }
+           
                 if (keys[GLFW_KEY_J] && shouldHit && !cooldown) {
                     
                         cout << "HIT!" << endl;
@@ -375,6 +395,26 @@ int main()
                 }
             }
         
+            if (activateWalking) {
+                if (changeStep >= 0.4) {
+                    stepTime += 0.4f;
+                    changeStep = 0.0f;
+                }
+                
+                 if (changeStep < 0.2 ) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalking1, uniformModel);
+                }
+                else if( changeStep < 0.4 ){
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalking2, uniformModel);
+                }
+                
+            }
+            else {
+                spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcStationary, uniformModel);
+            }
+
+            
+
             if (cooldown) {
                 if (hasHit >= 3.0f) {
                     cooldown = false;
@@ -391,7 +431,9 @@ int main()
         dontMoveLeft = false;
         dontMoveRight = false;
 
+		activateWalking = false;
 		
+		cout << changeStep << endl;
 
         glUseProgram(0);
 
