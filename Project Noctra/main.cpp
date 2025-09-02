@@ -51,8 +51,14 @@ Texture singleQuote, comma;
 Texture testMap;
 Texture hitBoxTexture;
 Texture mcStationary;
-Texture mcWalking1;
-Texture mcWalking2;
+Texture mcWalkingLeft1;
+Texture mcWalkingLeft2;
+Texture mcWalkingRight1;
+Texture mcWalkingRight2;
+Texture mcWalkingUp1;
+Texture mcWalkingUp2;
+Texture mcWalkingDown1;
+Texture mcWalkingDown2;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -166,8 +172,14 @@ void initTextures() {
 	testMap = Texture("Textures/mapTest.png");
 	hitBoxTexture = Texture("Textures/hitBoxTexture.png");
 	mcStationary = Texture("Textures/mc_stationary.png");
-	mcWalking1 = Texture("Textures/mc_step_one.png");
-	mcWalking2 = Texture("Textures/mc_step_two.png");
+	mcWalkingLeft1 = Texture("Textures/mc_walk_left_1.png");
+	mcWalkingLeft2 = Texture("Textures/mc_walk_left_2.png");
+	mcWalkingRight1 = Texture("Textures/mc_walk_right_1.png");
+	mcWalkingRight2 = Texture("Textures/mc_walk_right_2.png");
+	mcWalkingDown1 = Texture("Textures/mc_step_one.png");
+	mcWalkingDown2 = Texture("Textures/mc_step_two.png");
+	mcWalkingUp1 = Texture("Textures/mc_walk_down_1.png");
+	mcWalkingUp2 = Texture("Textures/mc_walk_down_2.png");
     a.LoadTexture();
     b.LoadTexture();
     c.LoadTexture();
@@ -199,8 +211,14 @@ void initTextures() {
 	testMap.LoadTexture();
 	hitBoxTexture.LoadTexture();
 	mcStationary.LoadTexture();
-	mcWalking1.LoadTexture();
-	mcWalking2.LoadTexture();
+	mcWalkingLeft1.LoadTexture();
+	mcWalkingLeft2.LoadTexture();
+	mcWalkingRight1.LoadTexture();
+	mcWalkingRight2.LoadTexture();
+	mcWalkingDown1.LoadTexture();
+	mcWalkingDown2.LoadTexture();
+	mcWalkingUp1.LoadTexture();
+	mcWalkingUp2.LoadTexture();
 }
 
 void collisionDec(float& XMovement, float& YMovement) {
@@ -264,7 +282,10 @@ int main()
     float changeStep = 0.0f;
 	float stepTime = 0.0f;
 
-	bool activateWalking = false;
+	bool activateWalkingLeft = false;
+    bool activateWalkingRight = false;
+    bool activateWalkingUp = false;
+    bool activateWalkingDown = false;
 
     while (!mainWindow.getShouldClose())
     {
@@ -368,19 +389,19 @@ int main()
                 else {
                     if (keys[GLFW_KEY_W] && !dontMoveUp) {
                         YMovement -= 300.0f * deltaTime;
-                        activateWalking = true;
+                        activateWalkingUp = true;
                     }
                     if (keys[GLFW_KEY_S] && !dontMoveDown) {
                         YMovement += 300.0f * deltaTime;
-                        activateWalking = true;
+                        activateWalkingDown = true;
                     }
                     if (keys[GLFW_KEY_A] && !dontMoveLeft) {
                         XMovement += 300.0f * deltaTime;
-						activateWalking = true;
+						activateWalkingLeft = true;
                     }
                     if (keys[GLFW_KEY_D] && !dontMoveRight) {
                         XMovement -= 300.0f * deltaTime;
-                        activateWalking = true;
+                        activateWalkingRight = true;
                     }
                 }
            
@@ -395,19 +416,55 @@ int main()
                 }
             }
         
-            if (activateWalking) {
+            if (activateWalkingLeft) {
                 if (changeStep >= 0.4) {
                     stepTime += 0.4f;
                     changeStep = 0.0f;
                 }
                 
                  if (changeStep < 0.2 ) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalking1, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft1, uniformModel);
                 }
                 else if( changeStep < 0.4 ){
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalking2, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft2, uniformModel);
                 }
                 
+            }
+            else if (activateWalkingRight) {
+                if (changeStep >= 0.4) {
+                    stepTime += 0.4f;
+                    changeStep = 0.0f;
+                }
+                if (changeStep < 0.2) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight1, uniformModel);
+                }
+                else if (changeStep < 0.4) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight2, uniformModel);
+                }
+            }
+            else if (activateWalkingDown) {
+                if (changeStep >= 0.4) {
+                    stepTime += 0.4f;
+                    changeStep = 0.0f;
+                }
+                if (changeStep < 0.2) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown1, uniformModel);
+                }
+                else if (changeStep < 0.4) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown2, uniformModel);
+                }
+            }
+            else if (activateWalkingUp) {
+                if (changeStep >= 0.4) {
+                    stepTime += 0.4f;
+                    changeStep = 0.0f;
+                }
+                if (changeStep < 0.2) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp1, uniformModel);
+                }
+                else if (changeStep < 0.4) {
+                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp2, uniformModel);
+                }
             }
             else {
                 spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcStationary, uniformModel);
@@ -431,7 +488,11 @@ int main()
         dontMoveLeft = false;
         dontMoveRight = false;
 
-		activateWalking = false;
+		activateWalkingLeft = false;
+        activateWalkingRight = false;
+		activateWalkingDown = false;
+        activateWalkingUp = false;
+        
 		
 		cout << changeStep << endl;
 
