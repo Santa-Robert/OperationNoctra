@@ -59,6 +59,7 @@ Texture mcWalkingUp1;
 Texture mcWalkingUp2;
 Texture mcWalkingDown1;
 Texture mcWalkingDown2;
+Texture mcAttackRight1, mcAttackRight2, mcAttackRight3, mcAttackRight4, mcAttackRight5, mcAttackRight6, mcAttackRight7;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -180,6 +181,13 @@ void initTextures() {
 	mcWalkingDown2 = Texture("Textures/mc_step_two.png");
 	mcWalkingUp1 = Texture("Textures/mc_walk_down_1.png");
 	mcWalkingUp2 = Texture("Textures/mc_walk_down_2.png");
+	mcAttackRight1 = Texture("Textures/battleAnim/mc_attack_1.png");
+	mcAttackRight2 = Texture("Textures/battleAnim/mc_attack_2.png");
+	mcAttackRight3 = Texture("Textures/battleAnim/mc_attack_3.png");
+	mcAttackRight4 = Texture("Textures/battleAnim/mc_attack_4.png");
+	mcAttackRight5 = Texture("Textures/battleAnim/mc_attack_5.png");
+	mcAttackRight6 = Texture("Textures/battleAnim/mc_attack_6.png");
+	mcAttackRight7 = Texture("Textures/battleAnim/mc_attack_7.png");
     a.LoadTexture();
     b.LoadTexture();
     c.LoadTexture();
@@ -219,6 +227,13 @@ void initTextures() {
 	mcWalkingDown2.LoadTexture();
 	mcWalkingUp1.LoadTexture();
 	mcWalkingUp2.LoadTexture();
+	mcAttackRight1.LoadTexture();
+	mcAttackRight2.LoadTexture();
+	mcAttackRight3.LoadTexture();
+	mcAttackRight4.LoadTexture();
+	mcAttackRight5.LoadTexture();
+	mcAttackRight6.LoadTexture();
+	mcAttackRight7.LoadTexture();
 }
 
 void collisionDec(float& XMovement, float& YMovement) {
@@ -245,6 +260,33 @@ void canHitDec(float& XMovement, float& YMovement) {
 		shouldHit = true;
    }
 
+}
+
+void AttackAnim(GLuint uniformModel, float timeOff) {
+	 
+    if (timeOff < 0.05f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight1, uniformModel);
+    }
+    else if (timeOff < 0.10f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight2, uniformModel);
+    }
+    else if (timeOff < 0.15f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight3, uniformModel);
+    }
+    else if (timeOff < 0.20f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight4, uniformModel);
+    }
+    else if (timeOff < 0.25f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight5, uniformModel);
+    }
+    else if (timeOff < 0.30f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight6, uniformModel);
+    }
+    else if (timeOff < 0.35f) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight7, uniformModel);
+    }
+	cout << "TimeOff: " << timeOff << endl;
+	
 }
 
 int main()
@@ -287,6 +329,11 @@ int main()
     bool activateWalkingUp = false;
     bool activateWalkingDown = false;
 
+	float timeOff = 0.0f;
+	float timeOffAction = 0.0f;
+
+	bool shouldPlayAnim = false;
+
     while (!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();
@@ -296,6 +343,8 @@ int main()
 		hasHit = glfwGetTime() - timeOfHit;
        
         changeStep = glfwGetTime() - stepTime;
+
+		timeOff = glfwGetTime() - timeOffAction;
 
         glfwPollEvents();
 
@@ -412,10 +461,20 @@ int main()
                         cooldown = true;
                         
                         timeOfHit = glfwGetTime();
+
+						timeOffAction = glfwGetTime();
+
+						shouldPlayAnim = true;
+						
                     
                 }
             }
         
+            if (shouldPlayAnim) {
+                AttackAnim(uniformModel, timeOff);
+                
+            }
+
             if (activateWalkingLeft) {
                 if (changeStep >= 0.4) {
                     stepTime += 0.4f;
@@ -423,10 +482,10 @@ int main()
                 }
                 
                  if (changeStep < 0.2 ) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft1, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft1, uniformModel);
                 }
                 else if( changeStep < 0.4 ){
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft2, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingLeft2, uniformModel);
                 }
                 
             }
@@ -436,10 +495,10 @@ int main()
                     changeStep = 0.0f;
                 }
                 if (changeStep < 0.2) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight1, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight1, uniformModel);
                 }
                 else if (changeStep < 0.4) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight2, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingRight2, uniformModel);
                 }
             }
             else if (activateWalkingDown) {
@@ -448,10 +507,10 @@ int main()
                     changeStep = 0.0f;
                 }
                 if (changeStep < 0.2) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown1, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown1, uniformModel);
                 }
                 else if (changeStep < 0.4) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown2, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingDown2, uniformModel);
                 }
             }
             else if (activateWalkingUp) {
@@ -460,20 +519,21 @@ int main()
                     changeStep = 0.0f;
                 }
                 if (changeStep < 0.2) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp1, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp1, uniformModel);
                 }
                 else if (changeStep < 0.4) {
-                    spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp2, uniformModel);
+                    spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcWalkingUp2, uniformModel);
                 }
             }
             else {
-                spawnObj(0, 500.0f, 400.0f, 0.4f, 5.35f * 23, 6.0f * 20, 1.0f, mcStationary, uniformModel);
+                spawnObj(0, 500.0f, 400.0f, 0.65f, 5.35f * 23, 6.0f * 20, 1.0f, mcStationary, uniformModel);
+                
             }
 
             
 
             if (cooldown) {
-                if (hasHit >= 3.0f) {
+                if (hasHit >= 0.5f) {
                     cooldown = false;
                     hasHit = 0.0f;
                 }
@@ -494,7 +554,7 @@ int main()
         activateWalkingUp = false;
         
 		
-		cout << changeStep << endl;
+		//cout << changeStep << endl;
 
         glUseProgram(0);
 
