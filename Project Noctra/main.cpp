@@ -59,7 +59,7 @@ Texture mcWalkingUp1;
 Texture mcWalkingUp2;
 Texture mcWalkingDown1;
 Texture mcWalkingDown2;
-Texture mcAttackRight1, mcAttackRight2, mcAttackRight3, mcAttackRight4, mcAttackRight5, mcAttackRight6, mcAttackRight7;
+Texture mcAttackRight1, mcAttackRight2, mcAttackRight3, mcAttackRight4, mcAttackRight5, mcAttackRight6, mcAttackRight7, mcAttackRight8, mcAttackRight9, mcAttackRight10, mcAttackRight11;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -188,6 +188,10 @@ void initTextures() {
 	mcAttackRight5 = Texture("Textures/battleAnim/mc_attack_5.png");
 	mcAttackRight6 = Texture("Textures/battleAnim/mc_attack_6.png");
 	mcAttackRight7 = Texture("Textures/battleAnim/mc_attack_7.png");
+	mcAttackRight8 = Texture("Textures/battleAnim/mc_attack_8.png");
+	mcAttackRight9 = Texture("Textures/battleAnim/mc_attack_9.png");
+	mcAttackRight10 = Texture("Textures/battleAnim/mc_attack_10.png");
+	mcAttackRight11 = Texture("Textures/battleAnim/mc_attack_11.png");
     a.LoadTexture();
     b.LoadTexture();
     c.LoadTexture();
@@ -234,6 +238,10 @@ void initTextures() {
 	mcAttackRight5.LoadTexture();
 	mcAttackRight6.LoadTexture();
 	mcAttackRight7.LoadTexture();
+	mcAttackRight8.LoadTexture();
+	mcAttackRight9.LoadTexture();
+	mcAttackRight10.LoadTexture();
+	mcAttackRight11.LoadTexture();
 }
 
 void collisionDec(float& XMovement, float& YMovement) {
@@ -264,28 +272,40 @@ void canHitDec(float& XMovement, float& YMovement) {
 
 void AttackAnim(GLuint uniformModel, float timeOff) {
 	 
-    if (timeOff < 0.05f) {
+    if (timeOff < 0.02f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight1, uniformModel);
     }
-    else if (timeOff < 0.10f) {
+    else if (timeOff < 0.04f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight2, uniformModel);
     }
-    else if (timeOff < 0.15f) {
+    else if (timeOff < 0.06f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight3, uniformModel);
     }
-    else if (timeOff < 0.20f) {
+    else if (timeOff < 0.08f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight4, uniformModel);
     }
-    else if (timeOff < 0.25f) {
+    else if (timeOff < 0.10f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight5, uniformModel);
     }
-    else if (timeOff < 0.30f) {
+    else if (timeOff < 0.12f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight6, uniformModel);
     }
-    else if (timeOff < 0.35f) {
+    else if (timeOff < 0.14f) {
         spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight7, uniformModel);
     }
-	cout << "TimeOff: " << timeOff << endl;
+    else if (timeOff < 0.16) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight8, uniformModel);
+    }
+    else if (timeOff < 0.18) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight9, uniformModel);
+    }
+    else if (timeOff < 0.20) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight10, uniformModel);
+    }
+    else if (timeOff < 0.22) {
+        spawnObj(0, 564.5f, 396.0f, 0.66f, 10.7f * 23, 12.0f * 20, 1.0f, mcAttackRight11, uniformModel);
+    }
+	
 	
 }
 
@@ -333,6 +353,11 @@ int main()
 	float timeOffAction = 0.0f;
 
 	bool shouldPlayAnim = false;
+
+	int health = 60;
+	
+
+	
 
     while (!mainWindow.getShouldClose())
     {
@@ -466,14 +491,19 @@ int main()
 
 						shouldPlayAnim = true;
 						
-                    
+						health -= 5;
+
                 }
             }
         
             if (shouldPlayAnim) {
                 AttackAnim(uniformModel, timeOff);
+				
                 
+				
             }
+
+            
 
             if (activateWalkingLeft) {
                 if (changeStep >= 0.4) {
@@ -554,7 +584,13 @@ int main()
         activateWalkingUp = false;
         
 		
-		//cout << changeStep << endl;
+        if (health >= 1) {
+            cout << health << endl;
+        }
+        else {
+			cout << "You Died!" << endl;
+        }
+		
 
         glUseProgram(0);
 
