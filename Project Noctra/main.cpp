@@ -395,13 +395,13 @@ int main()
        
         
 
-        //spawnObj(1, 470.0f, 100.0f, 0.9f, 650.0f, 180.0f, 1.0f, textBoxTexture, uniformModel);
+        spawnObj(1, 470.0f, 100.0f, 0.9f, 650.0f, 180.0f, 1.0f, textBoxTexture, uniformModel);
        
 
 
 
 
-       // readString("a pizza finom", uniformModel);
+        readString("asd asd asd asd ", uniformModel);
         
 
        
